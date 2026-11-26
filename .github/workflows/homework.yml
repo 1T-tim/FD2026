@@ -2,7 +2,7 @@ name: ДЗ · Первый урожай
 
 on:
   push:
-    branches: [main]
+    branches: ["**"]
     paths:
       - 'lesson4/homework/**'
       - '.github/workflows/homework.yml'
@@ -10,7 +10,6 @@ on:
       - 'gradlew'
       - 'gradle/wrapper/**'
   pull_request:
-    branches: [main]
     paths:
       - 'lesson4/homework/**'
       - '.github/workflows/homework.yml'
@@ -63,10 +62,10 @@ jobs:
         shell: bash
         run: bash course/.github/scripts/check-homework.sh course submission
       - name: Тесты поведения
-        if: github.event_name == 'pull_request' && steps.homework.outputs.published == 'true'
+        if: (github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name != 'main')) && steps.homework.outputs.published == 'true'
         working-directory: course
         run: ./gradlew --no-daemon --console=plain -p lesson4/homework test
       - name: Проверить компиляцию заготовки
-        if: github.event_name != 'pull_request' && steps.homework.outputs.published == 'true'
+        if: (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'main')) && steps.homework.outputs.published == 'true'
         working-directory: course
         run: ./gradlew --no-daemon --console=plain -p lesson4/homework testClasses
