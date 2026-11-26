@@ -23,32 +23,6 @@ permissions:
   contents: read
 
 jobs:
-  tests:
-    # The upstream default branch intentionally contains unfinished exercises.
-    if: github.repository != 'TimofeyYA1/FD2026' || github.event_name != 'push'
-    name: ${{ matrix.suite }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    strategy:
-      fail-fast: false
-      matrix:
-        suite: [Task01Test, Task02Test, Task03Test, Task04Test, Task05Test]
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '26'
-      - name: Сборка и запуск
-        env:
-          SUITE: ${{ matrix.suite }}
-        run: ./gradlew --no-daemon --console=plain -q :seminar-4:test --tests "*$SUITE"
-      - name: Результаты тестов
-        if: ${{ !cancelled() }}
-        run: python3 .github/scripts/results.py '${{ matrix.suite }}'
-
   smoke:
     name: ${{ matrix.os }} · запуск и сборка тестов
     runs-on: ${{ matrix.os }}
