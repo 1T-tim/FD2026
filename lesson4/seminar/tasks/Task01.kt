@@ -6,4 +6,4 @@ package seminar4
  * Примеры: "  Аня  " → "Аня", null → "Гость", "   " → "Гость".
  * Попробуй использовать безопасный вызов ?. и оператор Элвиса ?:, без !!.
  */
-fun displayName(name: String?): String {}
+fun displayName(name: String?): String = error("Задача 1 пока не решена")
