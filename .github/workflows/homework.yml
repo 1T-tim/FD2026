@@ -18,9 +18,21 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Проверить, опубликована ли домашка
+        id: homework
+        shell: bash
+        run: |
+          if [[ -f lesson4/homework/settings.gradle.kts ]]; then
+            echo 'published=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'Домашнее задание ещё не опубликовано. Тесты не запускались.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'published=false' >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-java@v5
+        if: steps.homework.outputs.published == 'true'
         with:
           distribution: temurin
           java-version: '26'
       - name: Тесты поведения
-        run: ./System/gradlew --no-daemon --console=plain -p "lesson4/homework" test
+        if: steps.homework.outputs.published == 'true'
+        run: ./gradlew --no-daemon --console=plain -p "lesson4/homework" test

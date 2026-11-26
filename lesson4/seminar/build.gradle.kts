@@ -9,6 +9,12 @@ val bonus = providers.gradleProperty("bonus").orNull
 require(bonus == null || bonus in listOf("06", "07", "08", "09"))
 application { mainClass.set("seminar4.MainKt") }
 
+// Some IDEA versions request the Kotlin DSL preparation task on the module.
+// Keep the real preparation in the root and let that qualified request work too.
+tasks.register("prepareKotlinBuildScriptModel") {
+    dependsOn(":prepareKotlinBuildScriptModel")
+}
+
 kotlin {
     jvmToolchain(26)
     sourceSets {
