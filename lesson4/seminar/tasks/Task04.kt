@@ -2,14 +2,26 @@ package seminar4
 
 /**
  * 4. Прочитай обязательный лимит мест. Убери пробелы по краям.
- * Если лимита нет или строка пустая, вызови готовую missingCapacity().
+ * Если вход равен null или строка пуста после обрезки, вызови готовую missingCapacity().
  * Разбери число через toInt(). Поймай NumberFormatException и брось
  * EventConfigException, передав исходное исключение вторым аргументом (cause).
  * Если число <= 0, брось EventConfigException без cause.
  * Примеры: " 5 " → 5, null → EventConfigException, "abc" → EventConfigException с cause.
- * Вопрос: почему missingCapacity() возвращает Nothing, а не Unit или Nothing?
+ * Вопрос: почему missingCapacity() возвращает Nothing, а не Unit?
  */
-fun readCapacity(raw: String?): Int = error("Задача 4 пока не решена")
+fun readCapacity(raw: String?): Int {
+    val text = raw?.trim() ?: missingCapacity()
+    if (text.isEmpty()) missingCapacity()
+    val capacity = try {
+        text.toInt()
+    } catch (e: NumberFormatException) {
+        throw EventConfigException("Лимит не является целым числом: $text", e)
+    }
+    if (capacity <= 0) throw EventConfigException("Лимит должен быть положительным")
+
+    return capacity
+}
+
 // Готовые вспомогательные объявления для задачи 4. Менять их не нужно.
 class EventConfigException(message: String, cause: Throwable? = null) : IllegalStateException(message, cause)
 
@@ -33,8 +45,16 @@ fun missingCapacity(): Nothing = throw EventConfigException("Лимит мест
  *    с исходной NumberFormatException в cause. В обоих случаях onFinish() должен вызваться ровно один раз.
  */
 
+// Решение 4б: убираем return из finally, а onFinish() оставляем.
+fun checkedCapacity(raw: String?, onFinish: () -> Unit): Int {
+    try {
+        return readCapacity(raw)
+    } finally {
+        onFinish()
+    }
+}
+
 fun main() {
-    println("Задача 04: Kotlin запущен")
-    // После решения раскомментируйте пример ниже.
-    // println(readCapacity("25"))
+    val capacity = checkedCapacity("25") { println("Проверка завершена") }
+    println(capacity)
 }
