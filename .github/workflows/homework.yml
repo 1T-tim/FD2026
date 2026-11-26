@@ -1,38 +1,72 @@
 name: ДЗ · Первый урожай
+
 on:
   push:
     branches: [main]
-    paths: ['lesson4/homework/**', '.github/workflows/homework.yml']
+    paths:
+      - 'lesson4/homework/**'
+      - '.github/workflows/homework.yml'
+      - '.github/scripts/check-homework.sh'
+      - 'gradlew'
+      - 'gradle/wrapper/**'
   pull_request:
     branches: [main]
-    paths: ['lesson4/homework/**', '.github/workflows/homework.yml']
+    paths:
+      - 'lesson4/homework/**'
+      - '.github/workflows/homework.yml'
+      - '.github/scripts/check-homework.sh'
+      - 'gradlew'
+      - 'gradle/wrapper/**'
   workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   garden:
     name: Проверка сада
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v6
+      - name: Код курса и открытые тесты
+        uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          path: course
           persist-credentials: false
       - name: Проверить, опубликована ли домашка
         id: homework
         shell: bash
         run: |
-          if [[ -f lesson4/homework/settings.gradle.kts ]]; then
+          if [[ -f course/lesson4/homework/settings.gradle.kts ]]; then
             echo 'published=true' >> "$GITHUB_OUTPUT"
           else
             echo 'Домашнее задание ещё не опубликовано. Тесты не запускались.' >> "$GITHUB_STEP_SUMMARY"
             echo 'published=false' >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-java@v5
+      - name: Установить JDK 26
+        uses: actions/setup-java@v5
         if: steps.homework.outputs.published == 'true'
         with:
           distribution: temurin
           java-version: '26'
+      - name: Исходники решения из PR
+        uses: actions/checkout@v6
+        if: github.event_name == 'pull_request' && steps.homework.outputs.published == 'true'
+        with:
+          ref: ${{ github.sha }}
+          path: submission
+          persist-credentials: false
+          sparse-checkout: lesson4/homework/src
+      - name: Подставить исходники в проект курса
+        if: github.event_name == 'pull_request' && steps.homework.outputs.published == 'true'
+        shell: bash
+        run: bash course/.github/scripts/check-homework.sh course submission
       - name: Тесты поведения
-        if: steps.homework.outputs.published == 'true'
-        run: ./gradlew --no-daemon --console=plain -p "lesson4/homework" test
+        if: github.event_name == 'pull_request' && steps.homework.outputs.published == 'true'
+        working-directory: course
+        run: ./gradlew --no-daemon --console=plain -p lesson4/homework test
+      - name: Проверить компиляцию заготовки
+        if: github.event_name != 'pull_request' && steps.homework.outputs.published == 'true'
+        working-directory: course
+        run: ./gradlew --no-daemon --console=plain -p lesson4/homework testClasses
