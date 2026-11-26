@@ -7,3 +7,9 @@ package seminar4
  * Примеры: 3 → 3, " 2 " → 2, 2L → null, "0" → null, "пять" → null.
  */
 fun parseSeats(raw: Any?): Int? = error("Задача 2 пока не решена")
+
+fun main() {
+    println("Задача 02: Kotlin запущен")
+    // После решения раскомментируйте пример ниже.
+    // println(parseSeats(" 2 "))
+}

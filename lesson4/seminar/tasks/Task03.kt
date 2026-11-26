@@ -9,3 +9,9 @@ package seminar4
  * Подсказка: начать можно с `val email = raw?.trim() ?: return null`.
  */
 fun normalizeEmail(raw: String?): String? = error("Задача 3 пока не решена")
+
+fun main() {
+    println("Задача 03: Kotlin запущен")
+    // После решения раскомментируйте пример ниже.
+    // println(normalizeEmail("  anya@example.test  "))
+}

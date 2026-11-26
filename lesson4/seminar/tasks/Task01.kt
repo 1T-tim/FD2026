@@ -7,3 +7,9 @@ package seminar4
  * Попробуй использовать безопасный вызов ?. и оператор Элвиса ?:, без !!.
  */
 fun displayName(name: String?): String = error("Задача 1 пока не решена")
+
+fun main() {
+    println("Задача 01: Kotlin запущен")
+    // После решения раскомментируйте пример ниже.
+    // println(displayName("  Аня  "))
+}
