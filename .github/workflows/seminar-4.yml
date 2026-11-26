@@ -3,17 +3,6 @@ name: Семинар 4
 on:
   push:
     branches: [main, seminar4-current]
-  pull_request:
-    branches: [main]
-    paths:
-      - 'lesson4/seminar/**'
-      - '.run/**'
-      - '.github/workflows/seminar-4.yml'
-      - '.github/scripts/**'
-      - 'gradle/**'
-      - 'gradlew*'
-      - 'settings.gradle.kts'
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -24,6 +13,7 @@ permissions:
 
 jobs:
   smoke:
+    if: github.repository == 'TimofeyYA1/FD2026'
     name: ${{ matrix.os }} · запуск и сборка тестов
     runs-on: ${{ matrix.os }}
     strategy:
