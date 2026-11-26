@@ -43,10 +43,12 @@ git switch -c seminar4-current FETCH_HEAD
 ## 2. Откройте проект в IDEA и запустите файл
 
 1. Через **File → Open** откройте **корень репозитория**, где лежат `settings.gradle.kts` и `gradlew.bat`. Не подключайте `System` или `lesson4/seminar` как отдельный Gradle-проект. Если они уже подключены, отвяжите их в панели **Gradle** и подключите корневой `settings.gradle.kts`.
-2. В **File → Project Structure → Project SDK** выберите **JDK 26**. Если его нет, выберите **Download JDK**. В **Settings → Build Tools → Gradle** выберите **Wrapper** и **Gradle JVM: JDK 26**. Если IDEA пишет «maximum compatible Gradle JVM version is 25», поставьте **JDK 21 только для Gradle JVM**, а **Project SDK оставьте 26**. Gradle использует JDK 26 для компиляции и тестов. Нажмите **Reload All Gradle Projects**. При первом запуске нужен интернет.
+2. В **Settings → Build Tools → Gradle** выберите **Wrapper** и **Gradle JVM: JDK 21** (если его нет: **Download JDK → 21**). Нажмите **Reload All Gradle Projects** и дождитесь окончания импорта. Gradle сам скачает **JDK 26** для кода и тестов, если его ещё нет. На первом импорте нужен интернет. Если JDK 26 уже установлен и ваша IDEA принимает его как Gradle JVM, можно оставить 26.
 3. Откройте `lesson4/seminar/tasks/Task01.kt` и нажмите ▶ рядом с `fun main()`. До решения файл выводит `Задача 01: Kotlin запущен`. Потом раскомментируйте пример вызова под этой строкой или добавьте свой вызов. Так же работают `Task02.kt`–`Task09.kt`.
 
-Gradle и Kotlin отдельно устанавливать не нужно. Для команд в терминале нужна Java: `java -version` должна находить JDK, либо укажите `JAVA_HOME` на каталог JDK (не на `bin`). Если тесты запускаются из IDEA, достаточно правильно выбрать Gradle JVM.
+Gradle и Kotlin отдельно устанавливать не нужно. Для запуска из терминала используйте JDK 21 или 26: проверьте `java -version` или укажите `JAVA_HOME` на папку JDK (не на `bin`). При запуске из IDEA достаточно выбрать Gradle JVM.
+
+Если сеть не даёт скачать JDK автоматически, установите **JDK 26** через **File → Project Structure → SDK → Download JDK** и повторите импорт. **Gradle JVM** можно оставить на 21. Пока внизу идёт импорт, кнопка запуска Kotlin может быть серой.
 
 ## 3. Запустите тесты
 
