@@ -12,4 +12,5 @@ fun main() {
     println("Задача 01: Kotlin запущен")
     // После решения раскомментируйте пример ниже.
     // println(displayName("  Аня  "))
+    //solutionn
 }
