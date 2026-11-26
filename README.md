@@ -56,13 +56,14 @@ git switch -c seminar4-current FETCH_HEAD
 
 Откройте **корень** `FD2026`, где лежит `settings.gradle.kts`. Если IDEA предлагает импортировать Gradle, согласитесь. После обновления проекта нажмите **Gradle → Reload All Gradle Projects** и дождитесь окончания импорта.
 
-**Ошибки Java или Gradle?**
+**Какую Java выбрать?**
 
-1. **File → Project Structure → Project → SDK**: выберите **JDK 26**. Если его нет, нажмите **Download JDK** и выберите **26**.
-2. **Settings → Build Tools → Gradle**: используйте **Wrapper**. Если **Gradle JVM** не выбран или IDEA пишет, что Java 26 несовместима, выберите **JDK 21** (при необходимости скачайте через **Download JDK**). **Project SDK** оставьте на 26.
-3. Нажмите **Reload All Gradle Projects**. При первом импорте нужен интернет. Если в панели Gradle отдельно подключены `System` или `lesson4/seminar`, отвяжите их и оставьте корневой проект.
+- Если у вас уже работает **JDK 26**, оставьте его. Второй JDK ставить не нужно.
+- Если установлен только **JDK 21** или IDEA не запускает Gradle на 26, откройте **Settings → Build Tools → Gradle**, выберите **Wrapper** и поставьте **Gradle JVM: JDK 21**. Это версия для запуска Gradle; код и тесты всё равно используют **JDK 26**.
 
-Gradle и Kotlin отдельно устанавливать не нужно. Если Gradle запускается на JDK 21 и не находит JDK 26, сборка пытается скачать его автоматически.
+Нажмите **Reload All Gradle Projects**. Если Gradle не найдёт JDK 26, он попробует скачать его автоматически. Для первой сборки нужен интернет. Для запуска через ▶ проверьте, что в **File → Project Structure → Project → SDK** выбран **JDK 26**. Если IDEA его не видит или загрузка не удалась, выберите **Download JDK → 26**, затем снова перезагрузите Gradle. Если в панели Gradle отдельно подключены `System` или `lesson4/seminar`, отвяжите их и оставьте корневой проект.
+
+В терминале настройка **Gradle JVM** из IDEA не применяется: Wrapper запускается через Java из `JAVA_HOME` или `PATH`. Проверьте её командой `./gradlew --version` (Windows: `.\gradlew.bat --version`). Устанавливать Gradle и Kotlin отдельно не нужно.
 
 ## 4. Запустите задачу и тесты
 
