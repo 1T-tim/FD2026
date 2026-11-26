@@ -1,0 +1,33 @@
+name: Дополнительные задачи
+on:
+  workflow_dispatch:
+    inputs:
+      number:
+        description: Номер задачи
+        type: choice
+        required: true
+        options: ['06', '07', '08']
+permissions:
+  contents: read
+jobs:
+  bonus:
+    name: Task${{ inputs.number }}Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '26'
+      - name: Сборка и запуск
+        env:
+          BONUS: ${{ inputs.number }}
+        run: ./System/gradlew -p System --no-daemon --console=plain -q :seminar-4:test "-Pbonus=$BONUS"
+      - name: Результаты тестов
+        if: ${{ !cancelled() }}
+        env:
+          BONUS: ${{ inputs.number }}
+        run: python3 .github/scripts/results.py "Task${BONUS}Test"

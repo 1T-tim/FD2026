@@ -1,0 +1,36 @@
+name: Семинар 4
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [Task01Test, Task02Test, Task03Test, Task04Test, Task05Test]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '26'
+      - name: Сборка и запуск
+        run: ./System/gradlew -p System --no-daemon --console=plain -q :seminar-4:test --tests '*${{ matrix.suite }}'
+      - name: Результаты тестов
+        if: ${{ !cancelled() }}
+        run: python3 .github/scripts/results.py '${{ matrix.suite }}'

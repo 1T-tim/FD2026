@@ -1,0 +1,94 @@
+{
+  "trims a name but keeps the spaces inside": [
+    "Имя без крайних пробелов",
+    "displayName(\"  Аня Петрова  \") → \"Аня Петрова\""
+  ],
+  "uses guest when the name is missing": [
+    "Имя не указано",
+    "displayName(null) → \"Гость\""
+  ],
+  "uses guest when the name is empty or blank": [
+    "Пустое или пробельное имя",
+    "displayName(\"\") и displayName(\" \\t \") → \"Гость\""
+  ],
+  "accepts positive Int values through the maximum": [
+    "Положительное целое число",
+    "parseSeats(Int.MAX_VALUE) → Int.MAX_VALUE"
+  ],
+  "trims and parses positive decimal strings": [
+    "Число записано строкой",
+    "parseSeats(\" +003 \") → 3"
+  ],
+  "rejects zero and negative values both as Int and as String": [
+    "Ноль и отрицательные числа",
+    "parseSeats(0) и parseSeats(\" -1 \") → null"
+  ],
+  "rejects blank malformed and overflowing strings": [
+    "Некорректная строка или переполнение",
+    "parseSeats(\"2147483648\") и parseSeats(\"1 2\") → null"
+  ],
+  "rejects all other types even when they represent a positive number": [
+    "Неподдерживаемый тип",
+    "parseSeats(2L) → null, но parseSeats(2) → 2"
+  ],
+  "trims a valid email and keeps its case": [
+    "Пробелы снаружи и регистр email",
+    "normalizeEmail(\"  Anna@Example.test  \") → \"Anna@Example.test\""
+  ],
+  "returns null for missing or blank email": [
+    "Email не указан",
+    "normalizeEmail(null) и normalizeEmail(\"  \") → null"
+  ],
+  "needs exactly one at sign": [
+    "Ровно один знак @",
+    "normalizeEmail(\"anna@@example.test\") → null"
+  ],
+  "needs text on both sides": [
+    "Текст с обеих сторон @",
+    "normalizeEmail(\"anna@\") и normalizeEmail(\"@example.test\") → null"
+  ],
+  "does not allow whitespace inside the email": [
+    "Нет пробельных символов внутри",
+    "normalizeEmail(\"anna@ex\\tample.test\") → null"
+  ],
+  "missingCapacity throws an EventConfigException": [
+    "Лимит обязателен",
+    "missingCapacity() бросает EventConfigException"
+  ],
+  "configuration exception is an illegal state and preserves a supplied message and cause": [
+    "Сообщение и причина исключения",
+    "EventConfigException(\"bad\", e): message равно \"bad\", cause указывает на тот же e"
+  ],
+  "reads trimmed positive capacities": [
+    "Положительный лимит",
+    "readCapacity(\" +004 \") → 4"
+  ],
+  "missing and blank capacities fail without a cause": [
+    "Лимит не задан",
+    "readCapacity(\" \\t \") бросает EventConfigException с cause == null"
+  ],
+  "nonpositive parsed capacities fail without a cause": [
+    "Неположительный лимит",
+    "readCapacity(\"0\") бросает EventConfigException с cause == null"
+  ],
+  "malformed and overflowing capacities retain a NumberFormatException cause": [
+    "Причина ошибки сохранена",
+    "readCapacity(\" three \") бросает EventConfigException; cause от разбора \"three\" через toInt()"
+  ],
+  "rejects an invalid seat count": [
+    "Количество мест неизвестно",
+    "registrationStatus(null, 3) → \"Неверное количество мест\""
+  ],
+  "rejects when there are not enough seats": [
+    "Мест меньше, чем запрошено",
+    "registrationStatus(4, 3) → \"Мест не хватает\""
+  ],
+  "registers when the seats fit": [
+    "Мест достаточно",
+    "registrationStatus(2, 3) → \"Зарегистрирован\""
+  ],
+  "accepts an exact fit": [
+    "Мест ровно столько, сколько нужно",
+    "registrationStatus(3, 3) → \"Зарегистрирован\""
+  ]
+}
