@@ -5,9 +5,22 @@ sealed interface HarvestResult {
     data object NotRipe : HarvestResult
 }
 
-fun tryHarvest(bush: TomatoBush): HarvestResult = TODO("Задание 4")
+fun tryHarvest(bush: TomatoBush): HarvestResult = try {
+    HarvestResult.Picked(bush.harvest())
+} catch (e: NoTomatoException) {
+    HarvestResult.NotRipe
+}
 
-fun showHarvest(bush: TomatoBush): Unit = TODO("Задание 5")
+fun showHarvest(bush: TomatoBush) {
+    try {
+        when (val result = tryHarvest(bush)) {
+            is HarvestResult.Picked -> println("Собрали: ${result.tomato.label()}")
+            HarvestResult.NotRipe -> println("Собирать пока рано")
+        }
+    } finally {
+        println("Осмотр закончен") // Намеренная ошибка для проверки тестов.
+    }
+}
 
 fun main() {
     val bush = TomatoBush("  Черри  ")
