@@ -25,6 +25,7 @@ fun showHarvest(bush: TomatoBush) {
 fun main() {
     val bush = TomatoBush("  Черри  ")
 
+
     val can = WateringCan()
     repeat(2) { bush.water(can) }
     println(bush.peek()?.label() ?: "Плода пока нет")
