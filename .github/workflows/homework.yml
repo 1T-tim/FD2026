@@ -61,10 +61,49 @@ jobs:
         if: github.event_name == 'pull_request' && steps.homework.outputs.published == 'true'
         shell: bash
         run: bash course/.github/scripts/check-homework.sh course submission
-      - name: Тесты поведения
+      - name: Прогнать тесты
+        id: garden_tests
+        continue-on-error: true
         if: (github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_name != 'main')) && steps.homework.outputs.published == 'true'
         working-directory: course
         run: ./gradlew --no-daemon --console=plain -p lesson4/homework test
+      - name: Результаты проверки
+        if: ${{ !cancelled() && (steps.garden_tests.outcome == 'success' || steps.garden_tests.outcome == 'failure') }}
+        env:
+          TEST_OUTCOME: ${{ steps.garden_tests.outcome }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from html import escape
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+
+          reports = Path('course/lesson4/homework/build/test-results/test')
+          cases = [case for report in sorted(reports.glob('TEST-*.xml'))
+                   for case in ET.parse(report).iter('testcase')]
+          failures = [(case, issue) for case in cases for issue in case
+                      if issue.tag in ('failure', 'error')]
+          skipped = sum(case.find('skipped') is not None for case in cases)
+          passed = len(cases) - len(failures) - skipped
+          lines = [f'Прошли: {passed} из {len(cases)}. Не прошли: {len(failures)}. Пропущены: {skipped}.']
+          for case, issue in failures:
+              message = issue.get('message', '').removeprefix('java.lang.AssertionError: ')
+              if not re.match(r'Тест S\d+ не прошёл\.', message):
+                  lines.extend(['', case.get('name', 'Тест')])
+              lines.extend(['', message[:1500] or 'Тест завершился ошибкой.'])
+          success = os.environ['TEST_OUTCOME'] == 'success'
+          if not cases:
+              lines.append('Тесты не запустились или Gradle не создал отчёт. Подробности в шаге «Прогнать тесты».')
+          elif not success and not failures:
+              lines.append('Gradle завершился с ошибкой. Подробности в шаге «Прогнать тесты».')
+          for line in '\n'.join(lines).splitlines():
+              print('  ' + line)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('## Результаты проверки сада\n\n<pre>' + escape('\n'.join(lines)) + '</pre>\n')
+          raise SystemExit(0 if cases and not failures and success else 1)
+          PY
       - name: Проверить компиляцию заготовки
         if: (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref_name == 'main')) && steps.homework.outputs.published == 'true'
         working-directory: course
