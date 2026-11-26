@@ -5,13 +5,17 @@ package seminar4
  * Для семинара формат такой: ровно один @, с непустым текстом слева и справа,
  * без пробелов и других пробельных символов внутри. Регистр не меняй.
  * Если email не задан или не подходит, верни null.
- * Примеры: "  Anna@demo.test " → "Anna@demo.test", "anna" → null, null → null.
+ * Примеры: "  Anna@demo.test " → "Anna@demo.test", "a@b" → "a@b", "anna" → null, null → null.
  * Подсказка: начать можно с `val email = raw?.trim() ?: return null`.
  */
-fun normalizeEmail(raw: String?): String? = error("Задача 3 пока не решена")
+fun normalizeEmail(raw: String?): String? {
+    val email = raw?.trim() ?: return null
+    if (email.any { it.isWhitespace() }) return null
+    val at = email.indexOf('@')
+    if (at <= 0 || at == email.lastIndex || at != email.lastIndexOf('@')) return null
+    return email
+}
 
 fun main() {
-    println("Задача 03: Kotlin запущен")
-    // После решения раскомментируйте пример ниже.
-    // println(normalizeEmail("  anya@example.test  "))
+    println(normalizeEmail("  anya@example.test  "))
 }
