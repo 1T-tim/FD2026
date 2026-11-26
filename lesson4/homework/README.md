@@ -4,25 +4,11 @@
 
 ## Как запустить тесты
 
-**macOS и Linux.** Открой проект в IntelliJ IDEA и внизу выбери **Terminal**. Вставь эту строку целиком: она найдёт корень репозитория, перейдёт в `lesson4/homework` и запустит все тесты. Начинать можно из любой папки внутри репозитория.
+1. Открой в IntelliJ IDEA корень проекта **FD2026** (папку с `settings.gradle.kts`). Дождись импорта Gradle.
+2. В панели **Project** открой [`lesson4/homework/test/GardenTest.kt`](test/GardenTest.kt).
+3. Чтобы прогнать **все тесты ДЗ**, выбери **Тесты ДЗ 4 · Огород** в списке запусков сверху и нажми зелёную кнопку запуска. Чтобы проверить одну задачу, нажми зелёную стрелку слева от нужного класса в `GardenTest.kt`.
 
-```bash
-repo=$(git rev-parse --show-toplevel) && cd "$repo/lesson4/homework" && ../../gradlew test
-```
-
-**Если терминал открыт вне репозитория**, укажи полный путь. В IntelliJ IDEA щёлкни правой кнопкой по папке `lesson4/homework` и выбери **Copy Path/Reference… → Absolute Path**. Вставь скопированный путь вместо примера, сохранив кавычки:
-
-```bash
-cd "/полный/путь/к/FD2026/lesson4/homework" && ../../gradlew test
-```
-
-**Windows (PowerShell).** Подставь скопированный путь к папке домашки в эту команду:
-
-```powershell
-Set-Location -LiteralPath 'C:\путь\к\FD2026\lesson4\homework' -ErrorAction Stop; ..\..\gradlew.bat test
-```
-
-После перехода запускай команды отдельных шагов в этом же терминале. На Windows в них замени `../../gradlew` на `..\..\gradlew.bat`. В стартовой версии тесты запускаются, но падают на `TODO()`: это нормально до решения.
+На старте проверки падают на `TODO()`. Это нормально: задания ещё не решены.
 
 ## 1. Подпиши помидор
 
@@ -30,9 +16,7 @@ Set-Location -LiteralPath 'C:\путь\к\FD2026\lesson4\homework' -ErrorAction 
 
 Самопроверка: `" Черри "` даёт `"Черри"`, `null` даёт `"Без сорта"`, `""` даёт `""`.
 
-```bash
-../../gradlew test --tests '*TomatoTest'
-```
+**Проверка в IDEA:** открой [`GardenTest.kt`](test/GardenTest.kt) и нажми зелёную стрелку слева от `TomatoTest`.
 
 ## 2. Наполни лейку
 
@@ -40,9 +24,7 @@ Set-Location -LiteralPath 'C:\путь\к\FD2026\lesson4\homework' -ErrorAction 
 
 Самопроверка: два вызова `pour()` проходят, третий падает. После `refill()` снова доступны две порции.
 
-```bash
-../../gradlew test --tests '*WateringCanTest'
-```
+**Проверка в IDEA:** открой [`GardenTest.kt`](test/GardenTest.kt) и нажми зелёную стрелку слева от `WateringCanTest`.
 
 ## 3. Вырасти урожай
 
@@ -60,37 +42,32 @@ Set-Location -LiteralPath 'C:\путь\к\FD2026\lesson4\homework' -ErrorAction 
 
 Самопроверка: после двух поливов плода нет; неудачная третья попытка ничего не меняет; после долива третий успешный полив даёт плод. После шести успешных поливов можно снять два разных плода.
 
-```bash
-../../gradlew test --tests '*TomatoBushTest'
-```
+**Проверка в IDEA:** открой [`GardenTest.kt`](test/GardenTest.kt) и нажми зелёную стрелку слева от `TomatoBushTest`.
 
 ## 4. Преврати сбор в понятный результат
 
 Файл: [`Garden.kt`](src/Garden.kt). Тип `HarvestResult` уже дан. В `tryHarvest()` вызови `harvest()`: при успехе верни `Picked` с плодом, а на `NoTomatoException` верни `NotRipe`. Сделай `try/catch` выражением и не перехватывай другие исключения.
 
-```bash
-../../gradlew test --tests '*HarvestResultTest'
-```
+**Проверка в IDEA:** открой [`GardenTest.kt`](test/GardenTest.kt) и нажми зелёную стрелку слева от `HarvestResultTest`.
 
 ## 5. Покажи результат игроку
 
 В `showHarvest()` вызови `tryHarvest()` и разбери результат через `when` **без `else`**. Для `Picked` напечатай `Собрали: <подпись помидора>`, для `NotRipe` напечатай `Собирать пока рано`. В `finally` напечатай `Осмотр завершён`. Не возвращай ничего из `finally`.
 
-Готовый `main()` сначала показывает пустой куст, потом доливает воду и повторяет полив. Запусти его, чтобы проверить всю историю:
+**Проверка в IDEA:** в [`GardenTest.kt`](test/GardenTest.kt) запусти `GardenScenarioTest`. Чтобы посмотреть весь сценарий, открой [`Garden.kt`](src/Garden.kt) и нажми зелёную стрелку слева от `main()`.
 
-```bash
-../../gradlew test --tests '*GardenScenarioTest'
-../../gradlew run
-../../gradlew test
-```
-
-На старте `TODO()` в заготовках не даёт тестам пройти. Запускай нужную группу после каждого шага. С шагов 3–5 используются предыдущие классы.
+Задания 3–5 используют предыдущие классы. Перед сдачей прогони все тесты через **Тесты ДЗ 4 · Огород**.
 
 ## Как сдать
 
-1. В своём форке создай ветку `homework` от обновлённой `main`.
-2. Закоммить и отправь решение на GitHub. Меняй Kotlin-файлы в `lesson4/homework/src`.
-3. Открой pull request из `твой-форк:homework` в `TimofeyYA1/FD2026:main`.
-4. В PR открой вкладку **Checks → Проверка сада**. Если тест упал, отправь исправление в ту же ветку: проверка запустится снова.
+1. Убедись, что в IDEA выбрана ветка `homework-4`. Если ты уже создал её по инструкции, создавать заново не нужно.
+2. Закоммить решение. В коммит добавь только свои Kotlin-файлы из `lesson4/homework/src`. Отправь ветку в свой форк:
 
-Тесты открыты в [`test/GardenTest.kt`](test/GardenTest.kt). Их можно запускать локально. В PR GitHub берёт тесты из ветки курса, поэтому менять их для сдачи не нужно.
+   ```bash
+   git push -u origin homework-4
+   ```
+
+3. Открой pull request из `твой-форк:homework-4` в `TimofeyYA1/FD2026:main`. В **Files changed** должны быть только твои правки в `lesson4/homework/src`.
+4. Результаты тестов смотри в **Checks → Проверка сада**. Если тест упал, отправь исправление в ту же ветку.
+
+Тесты для PR берутся из репозитория курса. Менять их для сдачи не нужно.
